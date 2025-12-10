@@ -1,5 +1,4 @@
-import type React from
-="react"
+import type React from "react"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { AdminHeader } from "@/components/admin-header"
 
