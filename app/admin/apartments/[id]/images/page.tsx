@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
 import { Trash2, Star, StarOff, GripVertical, ArrowLeft, Pencil } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ImageUploader } from "@/components/image-uploader"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -225,46 +225,53 @@ export default function ApartmentImagesPage() {
 
   if (loading) {
     return (
-      <div className="container py-12">
-        <p>Loading apartment data...</p>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold">Loading...</h1>
+          <p className="text-muted-foreground mt-2">Please wait while we load the apartment data.</p>
+        </div>
       </div>
     )
   }
 
   if (!apartment) {
     return (
-      <div className="container py-12">
-        <p>Apartment not found</p>
-        <Button onClick={() => router.push("/admin/apartments")} className="mt-4">
-          Back to Apartments
-        </Button>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold">Apartment Not Found</h1>
+          <p className="text-muted-foreground mt-2">The apartment you're looking for doesn't exist.</p>
+        </div>
+        <Button onClick={() => router.push("/admin/apartments")}>Back to Apartments</Button>
       </div>
     )
   }
 
   return (
-    <main className="container py-12">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={() => router.push("/admin/apartments")}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <Button variant="outline" size="icon" onClick={() => router.push("/admin/apartments")}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div>
           <h1 className="text-3xl font-bold">{apartment.name} - Images</h1>
+          <p className="text-muted-foreground mt-2">Manage images for this apartment</p>
         </div>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-[1fr_300px]">
+      <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
         <div className="space-y-6">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Manage Images</h2>
-              <p className="text-muted-foreground mb-6">
+            <CardHeader>
+              <CardTitle>Manage Images</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-6">
                 Drag and drop to reorder images. The first image will be the main image shown in listings. Click the
                 star icon to set an image as featured.
               </p>
 
               {apartment.images.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed rounded-md">
+                <div className="text-center py-12 border-2 border-dashed rounded-lg">
                   <p className="text-muted-foreground">No images yet. Upload your first image!</p>
                 </div>
               ) : (
@@ -278,7 +285,7 @@ export default function ApartmentImagesPage() {
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
-                                className="flex items-center gap-4 p-3 bg-white border rounded-md"
+                                className="flex items-center gap-4 p-3 bg-muted/50 border rounded-lg"
                               >
                                 <div {...provided.dragHandleProps} className="cursor-grab">
                                   <GripVertical className="h-5 w-5 text-muted-foreground" />
@@ -330,7 +337,7 @@ export default function ApartmentImagesPage() {
                                     variant="ghost"
                                     size="icon"
                                     onClick={() => handleDeleteImage(image.id)}
-                                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
                                     title="Delete image"
                                   >
                                     <Trash2 className="h-4 w-4" />
@@ -352,16 +359,20 @@ export default function ApartmentImagesPage() {
 
         <div className="space-y-6">
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Upload New Image</h2>
+            <CardHeader>
+              <CardTitle>Upload New Image</CardTitle>
+            </CardHeader>
+            <CardContent>
               <ImageUploader onUploadComplete={handleImageUpload} />
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Tips</h2>
-              <ul className="space-y-2 text-sm">
+            <CardHeader>
+              <CardTitle>Tips</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>• Upload high-quality images (min. 1200x800px)</li>
                 <li>• Keep file sizes under 5MB for better performance</li>
                 <li>• Use descriptive alt text for better SEO</li>
@@ -410,6 +421,6 @@ export default function ApartmentImagesPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </main>
+    </div>
   )
 }

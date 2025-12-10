@@ -39,17 +39,22 @@ export default function AdminApartmentsPage() {
 
   if (loading) {
     return (
-      <div className="container py-12">
-        <h1 className="text-3xl font-bold mb-8">Apartments</h1>
-        <p>Loading apartments...</p>
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold">Apartments</h1>
+          <p className="text-muted-foreground mt-2">Loading apartments...</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <main className="container py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Apartments</h1>
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Apartments</h1>
+          <p className="text-muted-foreground mt-2">Manage your apartment listings</p>
+        </div>
         <Button>Add New Apartment</Button>
       </div>
 
@@ -97,13 +102,13 @@ export default function AdminApartmentsPage() {
               </CardContent>
 
               <CardFooter className="p-4 pt-0 flex gap-2">
-                <Button variant="outline" asChild className="flex-1">
+                <Button variant="outline" asChild className="flex-1 bg-transparent">
                   <Link href={`/admin/apartments/${apartment.id}`}>
                     <Edit className="h-4 w-4 mr-2" />
                     Edit
                   </Link>
                 </Button>
-                <Button variant="outline" asChild className="flex-1">
+                <Button variant="outline" asChild className="flex-1 bg-transparent">
                   <Link href={`/admin/apartments/${apartment.id}/images`}>
                     <ImageIcon className="h-4 w-4 mr-2" />
                     Images ({apartment.images.length})
@@ -114,6 +119,6 @@ export default function AdminApartmentsPage() {
           )
         })}
       </div>
-    </main>
+    </div>
   )
 }

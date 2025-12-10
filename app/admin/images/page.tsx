@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { ImageUploader } from "@/components/image-uploader"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Image from "next/image"
 
 export default function AdminImagesPage() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([])
@@ -11,36 +13,64 @@ export default function AdminImagesPage() {
   }
 
   return (
-    <main className="container py-12">
-      <h1 className="text-3xl font-bold mb-6">Image Management</h1>
-
-      <div className="grid gap-8 md:grid-cols-2">
-        <div className="space-y-6">
-          <div className="p-6 border rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Upload New Image</h2>
-            <ImageUploader onUploadComplete={handleUploadComplete} />
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <h2 className="text-xl font-semibold">Recently Uploaded Images</h2>
-          {uploadedImages.length > 0 ? (
-            <div className="grid gap-4 grid-cols-2">
-              {uploadedImages.map((url, index) => (
-                <div key={index} className="relative aspect-square overflow-hidden rounded-md border">
-                  <img
-                    src={url || "/placeholder.svg"}
-                    alt={`Uploaded image ${index + 1}`}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-muted-foreground">No images uploaded yet.</p>
-          )}
-        </div>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold">Image Management</h1>
+        <p className="text-muted-foreground mt-2">Upload and manage apartment images</p>
       </div>
-    </main>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Upload New Image</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ImageUploader onUploadComplete={handleUploadComplete} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recently Uploaded Images</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {uploadedImages.length > 0 ? (
+              <div className="grid gap-4 grid-cols-2">
+                {uploadedImages.map((url, index) => (
+                  <div key={index} className="relative aspect-square overflow-hidden rounded-md border">
+                    <Image
+                      src={url || "/placeholder.svg"}
+                      alt={`Uploaded image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-sm">No images uploaded in this session yet.</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            To assign images to specific apartments, visit the Apartments section and select the apartment you want to
+            manage.
+          </p>
+          <a
+            href="/admin/apartments"
+            className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            Go to Apartments
+          </a>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
