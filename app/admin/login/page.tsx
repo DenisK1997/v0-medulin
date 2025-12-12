@@ -19,20 +19,30 @@ export default function AdminLoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log("[v0] Creating Supabase client...")
+      const supabase = createClient()
+      console.log("[v0] Client created, attempting login with email:", email)
+
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-      if (error) throw error
+
+      console.log("[v0] Sign in response:", { data: !!data, error: signInError?.message })
+
+      if (signInError) throw signInError
+
+      console.log("[v0] Login successful, redirecting to dashboard...")
       router.push("/admin/dashboard")
       router.refresh()
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      console.error("[v0] Login error:", error)
+      const errorMessage = error instanceof Error ? error.message : "An error occurred"
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
