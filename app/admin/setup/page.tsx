@@ -4,41 +4,25 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { createBrowserClient } from "@/lib/supabase/client"
+import { createAdminUser } from "./actions"
 
 export default function AdminSetupPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const [message, setMessage] = useState("")
-  const supabase = createBrowserClient()
 
-  const createAdminUser = async () => {
+  const handleCreateAdmin = async () => {
     setStatus("loading")
     setMessage("")
 
     try {
-      // Create the admin user
-      const { data, error } = await supabase.auth.signUp({
-        email: "admin@majstoric.com",
-        password: "admin123",
-        options: {
-          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || window.location.origin,
-          data: {
-            role: "admin",
-          },
-        },
-      })
+      const result = await createAdminUser()
 
-      if (error) {
-        // Check if user already exists
-        if (error.message.includes("already registered")) {
-          setStatus("error")
-          setMessage("Admin user already exists. You can log in at /admin/login")
-        } else {
-          throw error
-        }
-      } else {
+      if (result.success) {
         setStatus("success")
-        setMessage("Admin user created successfully! Email: admin@majstoric.com, Password: admin123")
+        setMessage(result.message)
+      } else {
+        setStatus("error")
+        setMessage(result.message)
       }
     } catch (error: any) {
       setStatus("error")
@@ -74,7 +58,11 @@ export default function AdminSetupPage() {
             </Alert>
           )}
 
-          <Button onClick={createAdminUser} disabled={status === "loading" || status === "success"} className="w-full">
+          <Button
+            onClick={handleCreateAdmin}
+            disabled={status === "loading" || status === "success"}
+            className="w-full"
+          >
             {status === "loading" ? "Creating Admin User..." : "Create Admin User"}
           </Button>
 
